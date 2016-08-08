@@ -168,7 +168,8 @@ legend, button::-moz-focus-inner, input::-moz-focus-inner {
 }
 
 body {
-  background: whitesmoke;
+  background-image: url(images/paper_fibers_@2X.png);
+  background-repeat: repeat;
 }
 
 .wrapper {

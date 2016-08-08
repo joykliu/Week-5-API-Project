@@ -199,7 +199,7 @@ voteApp.init = function() {
 				// pass on the users search result to the nyt app
 				// debugger;
 				if (userPeepNewR[0].state === "FL"){
-					var fillNameR = userPeepNewR[1].name.split(", ").reverse().join(" ");
+					var fullNameR = userPeepNewR[1].name.split(", ").reverse().join(" ");
 					var queryR = fullNameR;
 					var articleItemR = voteApp.getArticlesR(queryR);
 					var moneyR = userPeepNewR[1].total_contributions.toLocaleString().commafy();
