@@ -1,0 +1,444 @@
+@import "_setup.scss";
+@import "_mediaQueries.scss";
+// VARIABLES
+
+
+$headingFont: 'Oswald', 'Helvetica', sans-serif;
+$bodyFont: 'Quattrocento', 'Gerogia', serif;
+$usaRed: #BF0A30;
+$usaBlue: #002868;
+$lightBlue: #DEE7EF;
+$lightGrey: #E5E5E5;
+$darkBlue: #004B6A;
+
+// GLOBAL
+
+body {
+	background: whitesmoke;
+}
+
+.wrapper {
+	margin: 0 auto;
+	width: 90%;
+
+}
+
+h1, h2, h3 {
+	font-family: $headingFont;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+p, li {
+	font-family: $bodyFont;
+	text-transform: capitalize
+}
+
+ul {
+	padding: 0;
+	list-style-type: none;
+}
+
+header, footer {
+	width: 100%;
+}
+
+span.usaRed {
+	color: $usaRed;
+	font-style: italic;
+}
+
+span.type {
+	font-family: $bodyFont;
+	font-weight: normal;
+	font-style: italic;
+	font-size: 1rem;
+	letter-spacing: 1px;
+	color: $darkBlue;
+	display: block;
+	text-align: center;
+	text-transform: capitalize;
+}
+
+a, a:hover, a:active, a:visted {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+img.upsideDownFlag {
+	width: 50px;
+	vertical-align: middle;
+}
+
+// MY STUFF BELOW
+
+// HEADER SECTION STARTS
+header {
+	height: 100vh;
+	padding: 15vh 0;
+
+	.navBox > a {
+		display: block;
+		width: 50px;
+		height: 60px;
+		margin: 0 auto;
+		transition: 1.5s;
+
+		@media only screen and (max-width: 650px){
+			display: none;
+		}
+	
+		svg {
+			display: block;
+			margin: 0 auto;
+			transform: rotate(180deg);
+
+			path {
+				transition: 1.5s;
+			}
+		}
+
+		&:hover {
+			transform: rotate(180deg);
+			transform-orgin: center;
+
+			svg path {
+				fill: $usaRed;
+			}
+		}
+	}
+
+	.headerHeading {
+		width: 100%;
+
+		h1 {
+			font-size: 3.5rem;
+			color: $usaBlue;
+			letter-spacing: 3px;
+			margin-bottom: 0;
+			width: 100%;
+		}
+
+		h2 {
+			font-size: 1.2rem;
+			color: $usaBlue;
+			letter-spacing: 2px;
+			position: relative;
+			width: 100%;
+
+
+			&:after {
+				content: "";
+				height: 4px;
+				width: 150px;
+				position: absolute;
+				background: $usaRed;
+				bottom: -20px;
+				left: calc(50% - 75px);
+			}
+		}
+	}
+}
+
+.floatBoxContainer {
+	width: 100%;
+	padding: 10vh;
+
+	@media only screen and (max-width: 650px){
+			padding: 10vh 0;
+		}
+
+	.leftBox, .rightBox {
+		width: 50%;
+		float: left;
+		text-align: center;
+
+		@media only screen and (max-width: 650px){
+			width: 100%;
+			margin: 0 auto;
+			float: none;
+			margin-bottom: 5vh;
+		}
+
+		a {
+			font-size: 2.5rem;
+			color: $usaBlue;
+			text-transform: uppercase;
+			font-family: $headingFont;
+			font-weight: bold;
+			letter-spacing: 4px;
+			cursor: pointer;
+			background: $lightBlue;
+			padding: 30px;
+			border-radius: 20px;
+			display: block;
+			width: 80%;
+			margin: 0 auto;
+			text-decoration: none;
+			transition: 0.3s;
+
+			@media only screen and (min-width: 650px) and (max-width: 1024px) {
+				font-size: 3vw;
+			}
+
+			svg path {
+				transition: 0.3s;
+			}
+
+			&:hover {
+				color: $usaRed;
+
+				svg path {
+					fill: $usaRed;
+				}
+			}
+		}
+	}
+} // also a header thingy
+// HEADER SECTION ENDS
+
+// INFOEVERYONE SECTION STARTS
+.wrapper {
+	padding: 8vh 0;
+		> h2 {
+			font-size: 3rem;
+			color: $usaBlue;
+			letter-spacing: 3px;
+		}
+
+	}
+
+
+.peepList {
+	width: 50%;
+	height: 50vh;
+	overflow: scroll;
+	float: left;
+
+	@include media-query(tablet) {
+		width: 100%;
+		height: 50vh;
+		margin-bottom: 10vw;
+	}
+
+	ul {
+		margin: 0 auto;
+		width: 60%;
+
+		@include media-query(tablet) {
+			width: 80%;
+		}
+		// text-align: center;
+
+		li {
+			color: $usaBlue;
+			font-size: 1.5rem;
+			font-weight: bold;
+			display: block;
+			padding: 0.5rem 0;
+			margin: 0.3rem 0;
+			cursor: pointer;
+			border-bottom: 1px solid rgba($usaBlue, 0.3);
+			transition: 0.3s;
+
+			&:hover {
+				color: lighten($usaBlue, 20);
+			}
+
+			&:nth-child(even) {
+				color: $usaRed;
+				transition: 0.3s;
+
+				&:hover {
+					color: lighten($usaRed, 20)
+				}
+			}
+		}
+	}
+}
+
+.peepBox {
+	width: 50%;
+	height: 50vh;
+	float: left;
+	background: $lightBlue;
+	padding: 1.5rem 0;
+
+	@include media-query(tablet) {
+		width: 100%;
+	}
+
+	h3 {
+		font-size: 1.8rem;
+		letter-spacing: 2px;
+		margin: 0;
+		
+		&.peopleMoney, &.peopleState {
+			color: $darkBlue;
+		}
+
+	}
+
+	img {
+		width: 13%;
+		margin: 2rem auto 1rem auto;;
+		display: block;
+	}
+}
+//  INFOEVERYONE SECTION ENDS
+
+//INFO STATE CANDIDATE SECTIONS STARTS
+
+.formFields {
+	margin: 0 auto;
+	width: 60%;
+
+	@include media-query(tablet) {
+		width: 90%;
+	}
+
+	.selectContainer {
+		position: relative;
+		width: 68%;
+		display: inline-block;
+	}
+
+	select, input {
+		
+		-webkit-appearance: none;
+		padding: 5px 20px;
+		border: 4px solid $usaRed;
+		display: inline-block;
+		margin: 0 2%;
+		border-radius: 0;
+		background: lighten($lightBlue, 5);
+		margin: 0 auto;
+		width: 28%;
+		text-transform: uppercase;
+		font-family: $headingFont;
+		letter-spacing: 1px;
+		font-size: 1.3rem;
+		border-radius: 5px;
+		color: $usaBlue;
+		transition: 0.3s;
+	}
+
+	select {
+		width: 100%;
+		background-image: url(images/downArrow.png);
+		background-repeat: no-repeat;
+		background-position: 90% 50%; 
+		background-size: 5%;
+	}
+
+	input:hover {
+		background: $usaRed;
+		color: whitesmoke;
+	}
+}
+
+.infoContainer {
+	width: 100%;
+	margin: 15vh 0;
+
+	.infoBoxContainerLeft, .infoBoxContainerRight {
+		height: 70vh;
+		width: 45%;
+		margin: 0 2.5%;
+		float: left;
+		> img {
+			width: 13%;
+			display: block;
+			margin: 3rem auto 1rem auto;
+		}
+
+		@include media-query(tablet) {
+			width: 90%;
+			margin: 0 auto;
+			float: none;
+			padding-top: 5rem;
+			margin-bottom: 5rem;
+
+			>img {
+				margin: 0 auto;
+			}
+		}
+	}
+
+	.infoBoxContainerLeft{
+		background: rgba($lightBlue, 0.8);
+	}
+	
+	.infoBoxContainerRight{
+		background: rgba($usaRed, 0.1);
+
+	}
+
+	.infoLeft, .infoRight {
+		width: 100%;
+		padding: 0 1.5rem 3rem 1.5rem;
+		text-align: center;
+		font-size: 2rem;
+
+		a, p {
+			color: $darkBlue;
+			font-size: 1rem;
+			font-family: $bodyFont;
+			text-decoration: none;
+		}
+
+		a {
+			font-weight: bold;
+			transition: 0.3s;
+
+			&:hover {
+				color: lighten($usaBlue, 20);
+			}
+		}
+
+		img.nytimes {
+			display: block;
+			margin: 0 auto;
+			width: 40px;
+		}
+
+	}
+
+	.infoLeft {
+		h3 {
+			color: $usaBlue;
+			margin-top: 0;
+		}
+	}
+
+	.infoRight {
+		h3 {
+			color: $usaRed;
+			margin-top: 0;
+
+		}
+	}
+}
+
+// INFO STATE CANDIDATE SECTION ENDS;
+
+// FOOTER SECTION STARTS
+
+footer {
+	background: darken($darkBlue, 10);
+	text-align: center;
+	font-family: $bodyFont;
+	font-size: 0.8rem;
+	color: $lightGrey;
+	padding: 5px 0;
+
+	a {
+		text-decoration: none;
+		color: $lightGrey;
+		transition: 0.3s;
+		
+		&:hover {
+			color: $usaRed;
+		}
+	}
+}

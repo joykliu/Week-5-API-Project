@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+     width="1330" height="700" id="Flag of the United States" viewBox="0 0 18525 9750">
+<g id="inversion" transform="translate(18525,9750) scale(-1)">
+<rect width="100%" height="100%" fill="#bf0a30" id="red background" />
+<g fill="white">
+  <rect width="100%" height="750" y="750" />
+  <rect width="100%" height="750" y="2250" />
+  <rect width="100%" height="750" y="3750" />
+  <rect width="100%" height="750" y="5250" />
+  <rect width="100%" height="750" y="6750" />
+  <rect width="100%" height="750" y="8250" />
+</g>
+<rect id="blue field" fill="#002868" width="7410" height="5250" />
+<g id="star_rows_1_and_2">
+  <g id="star_row_2">
+    <polygon id="first_star_in_second_row" transform="translate(1235,1050) scale(300.3)" fill="white" points="0,-1 
+       0.587785252292473129168705954639072768597652,0.809016994374947424102293417182819058860155
+       -0.951056516295153572116439333379382143405699,-0.309016994374947424102293417182819058860155
+       0.951056516295153572116439333379382143405699,-0.309016994374947424102293417182819058860155
+       -0.587785252292473129168705954639072768597652,0.809016994374947424102293417182819058860155" />
+	  <!-- Note the points of the above polygon specify a 5-pointed star centered at (0,0) with radius 1. -->
+    <use id="second star in second row" xlink:href="#first_star_in_second_row" x="1235" />
+    <use id="third star in second row" xlink:href="#first_star_in_second_row" x="2470" />
+    <use id="fourth star in second row" xlink:href="#first_star_in_second_row" x="3705" />
+    <use id="fifth star in second row" xlink:href="#first_star_in_second_row" x="4940" />
+  </g>
+  <g id="star_row_1">
+    <use id="five of six stars in top row" xlink:href="#star_row_2" x="617.5" y="-525" />
+    <use id="first star in top row" xlink:href="#first_star_in_second_row" x="-617.5" y="-525" />
+  </g>
+</g>
+<use id="star rows 3 and 4" xlink:href="#star_rows_1_and_2" y="1050" />
+<use id="star rows 5 and 6" xlink:href="#star_rows_1_and_2" y="2100" />
+<use id="star rows 7 and 8" xlink:href="#star_rows_1_and_2" y="3150" />
+<use id="star row 9" xlink:href="#star_row_1" y="4200" />
+</g>
+</svg>

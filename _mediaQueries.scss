@@ -1,0 +1,11 @@
+$desktop: 1024px;
+$tablet: 835px;
+// $mobile: 460px;
+@mixin media-query($media-query) {
+
+	@if $media-query == tablet {
+		@media only screen and (max-width: $tablet) {
+			@content;
+		}
+	}
+}
