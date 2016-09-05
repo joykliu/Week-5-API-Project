@@ -1,0 +1,19 @@
+{
+  "name": "joy_liu_project5",
+  "version": "1.0.0",
+  "description": "follow the money api project",
+  "main": "map.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joykliu/Week-5-API-Project.git"
+  },
+  "author": "Joy Liu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joykliu/Week-5-API-Project/issues"
+  },
+  "homepage": "https://github.com/joykliu/Week-5-API-Project#readme"
+}
