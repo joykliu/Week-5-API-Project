@@ -9,11 +9,12 @@ const browserSync = require('browser-sync').create();
 const reload = browserSync.reload;
 
 gulp.task('styles', () => {
-    return gulp.src('./dev/styles/**/*.scss')
+    return gulp.src('dev/styles/*.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(autoprefixer('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
         .pipe(concat('style.css'))
-        .pipe(gulp.dest('./public'))
+        .on('error', onError)
+        .pipe(gulp.dest('public'))
         .pipe(reload({stream:true}));
 });
 
@@ -28,6 +29,7 @@ gulp.task('scripts', () => {
     .pipe(babel({
         presets: ['es2015']
     }))
+     .on('error', onError)
     .pipe(gulp.dest('./public'))
 });
 
@@ -38,3 +40,8 @@ gulp.task('browser-sync', () => {
 });
 
 gulp.task('default', ['browser-sync', 'styles', 'scripts', 'watch']);
+
+function onError(err) {
+  console.log(err);
+  this.emit('end');
+}

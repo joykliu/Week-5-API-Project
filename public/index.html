@@ -24,6 +24,35 @@
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
+	<script id="peepBoxTemp" type="x-handlebars-template">
+		<div class="peepParty">
+			{{imgtag}}
+		</div>
+		<div class="peepName" style="color: rgb(191, 10, 48);">
+			<h3 class="peopleName">{{peepName}}</h3>
+		</div>
+		<div class="peepState">
+			<span class="type">state:</span><h3 class="peopleState">{{peepState}}</h3>
+		</div>
+		<div class="peepMoney"><span class="type">Money Raised:</span><h3 class="peopleMoney"> ${{peepMoney}}</h3></div>
+	</script>
+	<script id="userPeepTemp" type="x-handlebars-template">
+		<h3>{{userPeepName}}</h3>
+		<span class="type">money raised</span>
+		<h3>${{userPeepMoney}}</h3>
+	</script>
+	<script id="nytTemplate" type="x-handlebars-template">
+		<div class="nytArticle clearfix">
+			<img class="nytimes" src="images/nytimes.png" alt="new york times logo">
+			<a href={{link}}>{{headline}}</a>
+		</div>
+	</script>
+	<script id="nytTemplateAlt" type="x-handlebars-template">
+		<div class="nytArticle clearfix">
+			<img class="nytimes" src="images/nytimes.png" alt="new york times logo">
+			<p>{{message}}</p>
+		</div>
+	</script>
 	<title>Follow the money | Your Guide To The 2016 Senate Election</title>
 </head>
 <body>
@@ -59,22 +88,11 @@
 				<div class="whoFloatContainer clearfix">
 					<div class="peepList">
 						<input type="text" class="searchBox" placeholder="Find My Candidate...">
-						<ul>
+						<ul id="peepList">
 						</ul>
 					</div><!-- /.asideWrapper -->
-					<div class="peepBox clearfix">
-						<div class="peepParty">
+					<div class="peepBox clearfix" id="peepBox">
 
-						</div>
-						<div class="peepName">
-
-						</div>
-						<div class="peepState">
-
-						</div>
-						<div class="peepMoney">
-
-						</div>
 					</div><!-- /.peepBox -->
 				</div><!-- /.whoFloatContainer  -->
 			</div><!-- /.whoWrapper -->
@@ -132,13 +150,13 @@
 					<div class="twoInfoBoxes clearfix">
 						<div class="infoBoxContainerLeft clearfix">
 							<img src="images/donkey.png" alt="democratic donkey logo">
-							<div class="infoLeft" id="donkey">
+							<div class="infoLeft" id="peepList">
 
 							</div><!-- /.infoLeft -->
 						</div>
 						<div class="infoBoxContainerRight clearfix">
 							<img src="images/elephant.svg" alt="republican elephant logo">
-							<div class="infoRight" id="elephant">
+							<div class="infoRight" id="peepList">
 
 							</div><!-- /.infoRight -->
 						</div>
@@ -160,6 +178,7 @@
 	<!-- democrat by Alex Tai from the Noun Project -->
 <!-- FOOTER ENDS! -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 	<script src="smooth-scroll-master/dist/js/smooth-scroll.min.js"></script>
 	<script src="main.js"></script>
 	<script>

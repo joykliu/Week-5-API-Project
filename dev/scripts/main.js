@@ -50,11 +50,27 @@ voteApp.getArticles = (query, card) => {
 
 voteApp.printArticle = (article, card) => {
 	if (article.length) {
-		const headline = article[0].headline.main;
-		const link = article[0].web_url;
-		$(card).append(`<div class="nytArticle clearfix"><img class="nytimes" src=images/nytimes.png alt="new york times logo"><a href=${link}>${headline}</a></div>`)
+        var headline = article[0].headline.main;
+        var link = article[0].web_url;
+
+        var nytTemplate = $('#nytTemplate').html();
+        var template = Handlebars.compile(nytTemplate);
+        var article = {
+            headline: headline,
+            link: link
+        };
+
+        console.log(article)
+        var articleTemplate = template(article);
+        $(card).append(articleTemplate);
 	} else {
-		$(card).append(`<div class="nytArticle clearfix"><img class="nytimes" src=images/nytimes.png alt="new york times logo"><p>Sadly the New York Times does not have information about this person at the moment :(</p></div>`)
+        var nytTemplateAlt = $('#nytTemplateAlt').html();
+        var nytTempAlt = Handlebars.compile(nytTemplateAlt);
+        var message = {
+            message: `Sadly the New York Times does not have information about this person at the moment :(`
+        };
+        var articleTempAlt = nytTempAlt(message);
+		$(card).append(articleTempAlt)
 	}
 };
 // in order to get the names in regular human name format, break up the name by comma and turn it into an array, then reverse the array.
@@ -96,10 +112,6 @@ voteApp.init = () => {
                 } else {
                     $(`li.item${i}`).css('color', '#808080');
                 };
-                $(`ul li.item${i}`).on('click', () => {
-                    $(this).addClass('selected');
-                    $(this).siblings().removeClass('selected')
-                });
 			});
 
             $('ul li').each(function(){
@@ -118,8 +130,9 @@ voteApp.init = () => {
             });
 			// the first function starts. when the names are clicked on, their corresponding information shows up in the box nex to it.
 			$('.item').on('click', function(){
-				// *** NOTE:  MULTI SELECTOR
-				$('.peepName, .peepState, .peepMoney, .peepParty').empty();
+				$('.peepBox').empty();
+                $(this).addClass('selected');
+                $(this).siblings().removeClass('selected')
 				const candidateObj = newArray[$(this).attr('value')];
 				const candidate = {
 					name: candidateObj.name.split(',').reverse().join(' ').toLowerCase(),
@@ -127,19 +140,28 @@ voteApp.init = () => {
 					state: candidateObj.state,
 				};//define candidate as array
 				//appending info on screen
-				$('.peepName').append(`<h3 class="peopleName">${candidate.name}</h3>`);
-				$('.peepState').append(`<span class="type">state:</span> <h3 class="peopleState">${candidate.state}</h3>`);
-				$('.peepMoney').append(`<span class="type">Money Raised:</span><h3 class="peopleMoney"> $${candidate.money}</h3>`);
+
+                const peepSource = $('#peepBoxTemp').html();
+                const compiledPeepTemplate = Handlebars.compile(peepSource);
+
+                const person = {
+                    peepName: candidate.name,
+                    peepState: candidate.state,
+                    peepMoney: candidate.money
+                };
+
+                const peepTemplate = compiledPeepTemplate(person);
+                $('#peepBox').append(peepTemplate);
 				// here is an if/else statement to check on the candidate's party affiliation in order to show differnt description
 				if(candidateObj.party === 'D') {
 					$('.peepParty').append(`<img src="images/donkey.png" alt="democrat donkey logo">`);
-					$('.peepName').css("color", "#002868");
+					$('.peepBox h3').css("color", "#002868");
 				} else if (candidateObj.party === "R") {
 					$('.peepParty').append(`<img src="images/elephant.svg" alt="republican elephant logo">`);
-					$('.peepName').css("color", "#BF0A30");
+					$('.peepBox h3').css("color", "#BF0A30");
 				} else {
 					$('.peepParty').append(`<img src="images/independent.png" alt="letter I cut out from american flag">`);
-					$('.peepName').css("color", "gray");
+					$('.peepBox h3').css("color", "gray");
 				}
 			});//'.item' onClick
 			// the first function ends here and now the second function starts only when the form is submitted
@@ -172,15 +194,23 @@ voteApp.init = () => {
 				}
 				const userPeepNewD = userPeepD.sort(sortPeeps);
 				const userPeepNewR = userPeepR.sort(sortPeeps);
-				//each array contains information about candidates, we are looking for 'party', 'state', 'office'(S),'name','total_contributions'
 				function makeCard(object, card) {
 					let fullName = object.name.split(", ").reverse().join(" ").split(' ');
 					fullName = fullName[0] + " " + fullName[fullName.length - 1];
 					const money = object.total_contributions.toLocaleString().commafy();
 					const articleItem = voteApp.getArticles(fullName, card);
-					$(card).append(`<h3>${fullName}</h3>`);
-					$(card).append(`<span class="type">money raised</span>`);
-					$(card).append(`<h3>$${money}</h3>`);
+
+                    const userPeepSource = $('#userPeepTemp').html();
+                    const template = Handlebars.compile(userPeepSource);
+
+                    const userPeep = {
+                        userPeepName: fullName,
+                        userPeepMoney: money
+                    }
+
+                    const userPeepTemplate = template(userPeep);
+
+                    $(card).append(userPeepTemplate);
 				}
 
 				if (userPeepNewR.length) {
