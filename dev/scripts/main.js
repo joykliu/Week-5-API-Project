@@ -225,6 +225,7 @@ voteApp.init = () => {
 				};
 			});//form on sumbit
 		});//.done
+        // .when
 };
 $(function() {
 	voteApp.init();
