@@ -1,19 +1,18 @@
 //get candidate information from api .results
-var voteApp = {};
+const voteApp = {};
 const nytUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 const nytKey = "a3cea551794c48929dc2a4abd0086be1";
 
-String.prototype.commafy = function () {
-    return this.replace(/(^|[^\w.])(\d{4,})/g, function($0, $1, $2) {
+String.prototype.commafy = function() {
+    return this.replace(/(^|[^\w.])(\d{4,})/g, ($0, $1, $2) => {
         return $1 + $2.replace(/\d(?=(?:\d\d\d)+(?!\d))/g, "$&,");
     });
 };
 
-Number.prototype.commafy = function () {
-    return String(this).commafy();
-};
 
-voteApp.getCandidates = (pageNum) => {
+Number.prototype.commafy = () => String(this).commafy();
+
+voteApp.getCandidates = pageNum => {
 	return $.ajax({
 		url: 'http://realtime.influenceexplorer.com/api/candidates/',
 		dataType: 'json',
@@ -37,12 +36,12 @@ voteApp.getArticles = (query, card) => {
 			q: `${query}`,
 			sort: 'newest'
 		}
-	}).then((results) => {
-		const article = results.response.docs.filter((article) => {
-			return article.subsection_name === 'Politics' ||
-				   article.news_desk === 'National' ||
-				   article.type_of_material === 'News' ||
-				   article.news_desk === 'Politics';
+	}).then(results => {
+		const article = results.response.docs.filter(item => {
+			return item.subsection_name === 'Politics' ||
+				   item.news_desk === 'National' ||
+				   item.type_of_material === 'News' ||
+				   item.news_desk === 'Politics';
 		});
 		voteApp.printArticle(article, card);
 	});
@@ -50,23 +49,22 @@ voteApp.getArticles = (query, card) => {
 
 voteApp.printArticle = (article, card) => {
 	if (article.length) {
-        var headline = article[0].headline.main;
-        var link = article[0].web_url;
+        const headline = article[0].headline.main;
+        const link = article[0].web_url;
 
-        var nytTemplate = $('#nytTemplate').html();
-        var template = Handlebars.compile(nytTemplate);
-        var article = {
-            headline: headline,
-            link: link
+        const nytTemplate = $('#nytTemplate').html();
+        const template = Handlebars.compile(nytTemplate);
+        const finalArticle = {
+            headline,
+            link,
         };
 
-        console.log(article)
-        var articleTemplate = template(article);
+        const articleTemplate = template(finalArticle);
         $(card).append(articleTemplate);
 	} else {
-        var nytTemplateAlt = $('#nytTemplateAlt').html();
-        var nytTempAlt = Handlebars.compile(nytTemplateAlt);
-        var message = {
+        const nytTemplateAlt = $('#nytTemplateAlt').html();
+        const nytTempAlt = Handlebars.compile(nytTemplateAlt);
+        const message = {
             message: `Sadly the New York Times does not have information about this person at the moment :(`
         };
         var articleTempAlt = nytTempAlt(message);
@@ -86,9 +84,7 @@ voteApp.init = () => {
 			// here we are calling the api five times in order to get all the information we need
 			let newArray = data1[0].results.concat(data2[0].results,data3[0].results,data4[0].results, data5[0].results)
 			//redefining names in the array
-			newArray.forEach((person) => {
-				person.name = person.name.split(', ').reverse().join(' ').toLowerCase();
-			});
+			newArray.forEach(person => person.name = person.name.split(', ').reverse().join(' ').toLowerCase());
 			//sorting array based on the name's value
 			newArray.sort((a, b) => {
 				const nameA = a.name.toUpperCase(); // ignore upper and lowercase
@@ -129,7 +125,8 @@ voteApp.init = () => {
                 });
             });
 			// the first function starts. when the names are clicked on, their corresponding information shows up in the box nex to it.
-			$('.item').on('click', function(){
+
+			$('.item').on('click', function() {
 				$('.peepBox').empty();
                 $(this).addClass('selected');
                 $(this).siblings().removeClass('selected')
@@ -140,6 +137,7 @@ voteApp.init = () => {
 					state: candidateObj.state,
 				};//define candidate as array
 				//appending info on screen
+
 
                 const peepSource = $('#peepBoxTemp').html();
                 const compiledPeepTemplate = Handlebars.compile(peepSource);
@@ -164,6 +162,7 @@ voteApp.init = () => {
 					$('.peepBox h3').css("color", "gray");
 				}
 			});//'.item' onClick
+
 			// the first function ends here and now the second function starts only when the form is submitted
 			$('form').on('submit', function(e) {
 				e.preventDefault();

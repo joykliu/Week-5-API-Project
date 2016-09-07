@@ -12,7 +12,7 @@ String.prototype.commafy = function () {
 };
 
 Number.prototype.commafy = function () {
-	return String(this).commafy();
+	return String(undefined).commafy();
 };
 
 voteApp.getCandidates = function (pageNum) {
@@ -40,8 +40,8 @@ voteApp.getArticles = function (query, card) {
 			sort: 'newest'
 		}
 	}).then(function (results) {
-		var article = results.response.docs.filter(function (article) {
-			return article.subsection_name === 'Politics' || article.news_desk === 'National' || article.type_of_material === 'News' || article.news_desk === 'Politics';
+		var article = results.response.docs.filter(function (item) {
+			return item.subsection_name === 'Politics' || item.news_desk === 'National' || item.type_of_material === 'News' || item.news_desk === 'Politics';
 		});
 		voteApp.printArticle(article, card);
 	});
@@ -54,13 +54,12 @@ voteApp.printArticle = function (article, card) {
 
 		var nytTemplate = $('#nytTemplate').html();
 		var template = Handlebars.compile(nytTemplate);
-		var article = {
+		var finalArticle = {
 			headline: headline,
 			link: link
 		};
 
-		console.log(article);
-		var articleTemplate = template(article);
+		var articleTemplate = template(finalArticle);
 		$(card).append(articleTemplate);
 	} else {
 		var nytTemplateAlt = $('#nytTemplateAlt').html();
@@ -85,7 +84,7 @@ voteApp.init = function () {
 		var newArray = data1[0].results.concat(data2[0].results, data3[0].results, data4[0].results, data5[0].results);
 		//redefining names in the array
 		newArray.forEach(function (person) {
-			person.name = person.name.split(', ').reverse().join(' ').toLowerCase();
+			return person.name = person.name.split(', ').reverse().join(' ').toLowerCase();
 		});
 		//sorting array based on the name's value
 		newArray.sort(function (a, b) {
@@ -127,6 +126,7 @@ voteApp.init = function () {
 			});
 		});
 		// the first function starts. when the names are clicked on, their corresponding information shows up in the box nex to it.
+
 		$('.item').on('click', function () {
 			$('.peepBox').empty();
 			$(this).addClass('selected');
@@ -138,6 +138,7 @@ voteApp.init = function () {
 				state: candidateObj.state
 			}; //define candidate as array
 			//appending info on screen
+
 
 			var peepSource = $('#peepBoxTemp').html();
 			var compiledPeepTemplate = Handlebars.compile(peepSource);
@@ -162,6 +163,7 @@ voteApp.init = function () {
 				$('.peepBox h3').css("color", "gray");
 			}
 		}); //'.item' onClick
+
 		// the first function ends here and now the second function starts only when the form is submitted
 		$('form').on('submit', function (e) {
 			e.preventDefault();
@@ -223,6 +225,7 @@ voteApp.init = function () {
 			};
 		}); //form on sumbit
 	}); //.done
+	// .when
 };
 $(function () {
 	voteApp.init();
