@@ -1,20 +1,22 @@
 "use strict";
 
-//get candidate information from api .results
 var voteApp = {};
 var nytUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 var nytKey = "a3cea551794c48929dc2a4abd0086be1";
 
+//**** COMMAFY FUNCTION TO DISPLAY STR NUM W/ COMMAS
 String.prototype.commafy = function () {
 	return this.replace(/(^|[^\w.])(\d{4,})/g, function ($0, $1, $2) {
 		return $1 + $2.replace(/\d(?=(?:\d\d\d)+(?!\d))/g, "$&,");
 	});
 };
 
+//**** COMMAFY FUCNTION TO DISPLAY INT NUM W/ COMMAS
 Number.prototype.commafy = function () {
 	return String(undefined).commafy();
 };
 
+//**** AJAX CALL TO GET CANDIDATE INFO
 voteApp.getCandidates = function (pageNum) {
 	return $.ajax({
 		url: 'http://realtime.influenceexplorer.com/api/candidates/',
@@ -29,6 +31,7 @@ voteApp.getCandidates = function (pageNum) {
 	});
 };
 
+//**** AJAX CALL TO GET ARTICLE INFO
 voteApp.getArticles = function (query, card) {
 	$.ajax({
 		url: nytUrl,
@@ -40,6 +43,7 @@ voteApp.getArticles = function (query, card) {
 			sort: 'newest'
 		}
 	}).then(function (results) {
+		//****FILERING ARTICLE INFO
 		var article = results.response.docs.filter(function (item) {
 			return item.subsection_name === 'Politics' || item.news_desk === 'National' || item.type_of_material === 'News' || item.news_desk === 'Politics';
 		});
@@ -47,11 +51,12 @@ voteApp.getArticles = function (query, card) {
 	});
 };
 
+//**** IF HAVE ARTICLE, PRINT ARTICLE INFO
+//**** ELSE SEND PRINT NO ARICLE MESSAGE ON SCREEN
 voteApp.printArticle = function (article, card) {
 	if (article.length) {
 		var headline = article[0].headline.main;
 		var link = article[0].web_url;
-
 		var nytTemplate = $('#nytTemplate').html();
 		var template = Handlebars.compile(nytTemplate);
 		var finalArticle = {
@@ -71,7 +76,8 @@ voteApp.printArticle = function (article, card) {
 		$(card).append(articleTempAlt);
 	}
 };
-// in order to get the names in regular human name format, break up the name by comma and turn it into an array, then reverse the array.
+
+//**** FIVE AJAX CALLS TO RETURN COMPLETE DATASET
 voteApp.init = function () {
 	var call1 = voteApp.getCandidates(1);
 	var call2 = voteApp.getCandidates(2);
@@ -80,13 +86,13 @@ voteApp.init = function () {
 	var call5 = voteApp.getCandidates(5);
 
 	$.when(call1, call2, call3, call4, call5).done(function (data1, data2, data3, data4, data5) {
-		// here we are calling the api five times in order to get all the information we need
+		//**** PUSHES ALL FIVE RESULTS TO ONE ARRAY
 		var newArray = data1[0].results.concat(data2[0].results, data3[0].results, data4[0].results, data5[0].results);
-		//redefining names in the array
+		//**** SORTING NAMES TO FIRST + LAST AND UPPERCASE
 		newArray.forEach(function (person) {
 			return person.name = person.name.split(', ').reverse().join(' ').toLowerCase();
 		});
-		//sorting array based on the name's value
+		//****sorting array based on the name's value
 		newArray.sort(function (a, b) {
 			var nameA = a.name.toUpperCase(); // ignore upper and lowercase
 			var nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -96,10 +102,12 @@ voteApp.init = function () {
 			if (nameA > nameB) {
 				return 1;
 			}
-			// names must be equal
+			//**** names must be equal
 			return 0;
 		});
-		//displaying names on screen
+
+		//**** APPENDING NAME ON SCROLLABLE LIST
+		//**** AND COLOR CODE <li> BASED ON PARTY AFFILIATION
 		newArray.forEach(function (person, i) {
 			$('ul').append("<li class=\"item item" + i + "\" value=\"" + i + "\"><i class=\"fa fa-star\" aria-hidden=\"true\"></i>   " + person.name + "</li>");
 			if (person.party === 'D') {
@@ -111,6 +119,7 @@ voteApp.init = function () {
 			};
 		});
 
+		//**** SET DATA ATTRIBUTE TO <li> CONTENT AND LOWERCASE
 		$('ul li').each(function () {
 			$(this).attr('data-search-term', $(this).text().toLowerCase());
 		});
@@ -125,33 +134,34 @@ voteApp.init = function () {
 				}
 			});
 		});
-		// the first function starts. when the names are clicked on, their corresponding information shows up in the box nex to it.
 
+		//**** <li> ON CLICK, APPEND INFO TO RIGHT BOX
 		$('.item').on('click', function () {
 			$('.peepBox').empty();
 			$(this).addClass('selected');
 			$(this).siblings().removeClass('selected');
+			//**** VALUE ATTRIBUTION EQUALS TO ITEMS INDEX
+			//**** USE [] SELECTOR TO SELECT CANDIDATE IN THE
+			//**** NEW ARRAY DEFINED ABOVE
 			var candidateObj = newArray[$(this).attr('value')];
 			var candidate = {
 				name: candidateObj.name.split(',').reverse().join(' ').toLowerCase(),
 				money: candidateObj.total_contributions.commafy(),
 				state: candidateObj.state
-			}; //define candidate as array
-			//appending info on screen
+			};
 
-
+			//**** HANDLEBARS TEMPLATING
 			var peepSource = $('#peepBoxTemp').html();
 			var compiledPeepTemplate = Handlebars.compile(peepSource);
-
 			var person = {
 				peepName: candidate.name,
 				peepState: candidate.state,
 				peepMoney: candidate.money
 			};
-
 			var peepTemplate = compiledPeepTemplate(person);
 			$('#peepBox').append(peepTemplate);
-			// here is an if/else statement to check on the candidate's party affiliation in order to show differnt description
+
+			//**** IF STATEMENT CHECKS ON CANDIDATE PARTY TO SHOW ICONS ACCORDINGLY
 			if (candidateObj.party === 'D') {
 				$('.peepParty').append("<img src=\"images/donkey.png\" alt=\"democrat donkey logo\">");
 				$('.peepBox h3').css("color", "#002868");
@@ -162,13 +172,15 @@ voteApp.init = function () {
 				$('.peepParty').append("<img src=\"images/independent.png\" alt=\"letter I cut out from american flag\">");
 				$('.peepBox h3').css("color", "gray");
 			}
-		}); //'.item' onClick
+		}); //$('.item').onClick
 
-		// the first function ends here and now the second function starts only when the form is submitted
 		$('form').on('submit', function (e) {
 			e.preventDefault();
 			$('.infoLeft').empty();
 			$('.infoRight').empty();
+
+			//**** FILTER ORIGINAL ARRAY OF ITEMS BY PARTY AFFILIATION
+			//**** STORES NEW INFO IN NEW ARRAY
 			var dems = newArray.filter(function (newArray) {
 				return newArray.party === "D";
 			}); //var dems
@@ -176,14 +188,15 @@ voteApp.init = function () {
 				return newArray.party === "R";
 			}); //var Reps
 
+			//**** FILTER ARRAY DEFINED ABOVE BY USER'S STATE SELECTION
 			var userPeepD = dems.filter(function (dems) {
 				return dems.state === $('select').val();
 			});
 			var userPeepR = rep.filter(function (rep) {
 				return rep.state === $('select').val();
 			});
-			// filter out the top contenders of each state as that's the information we want
-			function sortPeeps(a, b) {
+			//**** SORT OUT TWO FILERED ARRAY BY VALUE OF 'total_contributions'
+			var sortPeeps = function sortPeeps(a, b) {
 				if (parseFloat(a.total_contributions) > parseFloat(b.total_contributions)) {
 					return -1;
 				}
@@ -191,28 +204,30 @@ voteApp.init = function () {
 					return 1;
 				}
 				return 0;
-			}
+			};
 			var userPeepNewD = userPeepD.sort(sortPeeps);
 			var userPeepNewR = userPeepR.sort(sortPeeps);
-			function makeCard(object, card) {
+
+			//**** POPULATE INFOMATION ON TO TWO CARDS
+			var makeCard = function makeCard(object, card) {
+				//**** FURTHER CLEANING UP NAMES
+				//**** USE COMMAFY TO AD COMMAS TO TOTAL CONTRIBUTION NUMBER
 				var fullName = object.name.split(", ").reverse().join(" ").split(' ');
 				fullName = fullName[0] + " " + fullName[fullName.length - 1];
 				var money = object.total_contributions.toLocaleString().commafy();
 				var articleItem = voteApp.getArticles(fullName, card);
-
+				//**** HANDLEBARS JS TEMPLATING
 				var userPeepSource = $('#userPeepTemp').html();
 				var template = Handlebars.compile(userPeepSource);
-
 				var userPeep = {
 					userPeepName: fullName,
 					userPeepMoney: money
 				};
-
 				var userPeepTemplate = template(userPeep);
-
 				$(card).append(userPeepTemplate);
-			}
-
+			};
+			//**** INFORMATION EXISTS ABOUT CANDIDATES, APPEND INFORMATION
+			//**** ELSE, SEND MESSAGE TO USER
 			if (userPeepNewR.length) {
 				makeCard(userPeepNewR[0], ".infoRight");
 			} else {
