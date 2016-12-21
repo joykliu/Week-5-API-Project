@@ -1,47 +1,68 @@
-'use strict'
+var gulp   = require('gulp'),
+		browserSync = require('browser-sync'),
+		babel = require('gulp-babel'),
+		reload = browserSync.reload,
+		autoprefixer = require('gulp-autoprefixer'),
+		concat = require('gulp-concat'),
+		imageMin = require('gulp-imagemin'),
+		cleanCSS = require('gulp-clean-css'),
+		notify = require('gulp-notify'),
+		plumber = require('gulp-plumber'),
+		sass = require('gulp-sass'),
+		sourcemaps = require('gulp-sourcemaps'),
+		uglify = require('gulp-uglify');
 
-const gulp = require('gulp');
-const sass = require('gulp-sass');
-const concat = require('gulp-concat');
-const babel = require('gulp-babel');
-const autoprefixer = require('gulp-autoprefixer');
-const browserSync = require('browser-sync').create();
-const reload = browserSync.reload;
-
-gulp.task('styles', () => {
-    return gulp.src('dev/styles/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(autoprefixer('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
-        .pipe(concat('style.css'))
-        .on('error', onError)
-        .pipe(gulp.dest('public'))
-        .pipe(reload({stream:true}));
+gulp.task('bs', function() {
+	browserSync.init({
+		// if running on windows, change this to http://localhost
+		server: {
+            baseDir: "./public"
+        }
+	});
 });
 
-gulp.task('watch', () => {
-    gulp.watch('./dev/styles/**/*.scss', ['styles']);
-    gulp.watch('./dev/scripts/*.js', ['scripts']);
-    gulp.watch('./public/*.html', reload);
+gulp.task('styles', function() {
+	return gulp.src('./dev/styles/**/*.scss')
+		.pipe(plumber({
+		  errorHandler: notify.onError("Error: <%= error.message %>")
+		}))
+		.pipe(sourcemaps.init())
+		.pipe(sass())
+		.pipe(cleanCSS())
+		.pipe(concat('style.css'))
+		.pipe(autoprefixer('last 5 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
+		.pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest('./public/styles'))
+		.pipe(reload({ stream: true }));
 });
 
-gulp.task('scripts', () => {
-    gulp.src('./dev/scripts/main.js')
-    .pipe(babel({
-        presets: ['es2015']
-    }))
-     .on('error', onError)
-    .pipe(gulp.dest('./public'))
+gulp.task('scripts', function () {
+	return gulp.src('./dev/scripts/main.js')
+		.pipe(plumber({
+		  errorHandler: notify.onError("Error: <%= error.message %>")
+		}))
+		.pipe(sourcemaps.init())
+			.pipe(babel({
+				presets: ['es2015']
+			}))
+			.pipe(concat('main.min.js'))
+			.pipe(uglify())
+		.pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest('./public/scripts'))
+		.pipe(reload({stream:true}));
 });
 
-gulp.task('browser-sync', () => {
-    browserSync.init({
-        server: './public'
-    })
+gulp.task('images', function () {
+	return gulp.src('./public/images/**/*')
+		.pipe(imageMin())
+		.pipe(gulp.dest('./public/images'));
 });
 
-gulp.task('default', ['browser-sync', 'styles', 'scripts', 'watch']);
+// configure which files to watch and what tasks to use on file changes
+gulp.task('watch', function() {
+	gulp.watch('./dev/styles/**/*.scss', ['styles']);
+	gulp.watch('./dev/scripts/main.js', ['scripts']);
+	gulp.watch('./public/*.html', reload);
+});
 
-function onError(err) {
-  console.log(err);
-  this.emit('end');
-}
+gulp.task('default', ['styles', 'scripts', 'images', 'bs', 'watch']);
