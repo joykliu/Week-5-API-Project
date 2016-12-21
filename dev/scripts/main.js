@@ -12,7 +12,11 @@ propublicaApp.getCandidates = (state) => {
                 request.setRequestHeader('X-API-Key', PROPUBLICA_API);
             }
     }).then(results => {
-        console.log(results)
+        const senateCandidates = results.results.filter((candidate) => {
+            return candidate.district === '/races/CA/senate.json'
+        })
+
+        console.log(senateCandidates)
     })
 }
 
